@@ -27,11 +27,15 @@ public class SceneBuilder : MonoBehaviour {
             { ObjectType.Interface, interfacePrefab },
             { ObjectType.Method, methodPrefab },
         };
-        PackageObject authObject = new PackageObject(main, prefabs);
+        PackageLayout authObject = new PackageLayout(main, prefabs);
 
         GameObject city = authObject.Build();
 
         city.transform.localScale = city.transform.localScale * .5f;
+        //var pos = city.transform.localPosition;
+        //pos.x -= 1f;
+        //pos.y += .5f;
+        //city.transform.localPosition = pos;
     }
 
 }

@@ -5,14 +5,14 @@ using UnityEngine;
 using ScrumCity;
 
 
-public class PackageObject : CityLayout
+public class PackageLayout : CityLayout
 {
     private float packageHeight = 0.3f;
 
     public override Vector3 Margin { get { return new Vector3(3f, 0f, 3f); } }
 
 
-    public PackageObject(PackageNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
+    public PackageLayout(PackageNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
     { }
 
     public override GameObject Build()
@@ -22,12 +22,12 @@ public class PackageObject : CityLayout
         Vector2 size = Vector2.zero;
         List<CityLayout> childLayouts = new List<CityLayout>();
         GameObj = MonoBehaviour.Instantiate(prefabs[ObjectType.Package], Vector3.zero, Quaternion.identity);
-        GameObj.GetComponent<Details>().Node = Node;
+        GameObj.GetComponent<CityObject>().Node = Node;
 
         // Build All Child Packages
         foreach (PackageNode childPkg in node.Packages)
         {
-            PackageObject po = new PackageObject(childPkg, prefabs);
+            PackageLayout po = new PackageLayout(childPkg, prefabs);
             GameObject childGo = po.Build();
             childLayouts.Add(po);
 
@@ -37,7 +37,7 @@ public class PackageObject : CityLayout
         // Build All Child Classes
         foreach (ClassNode childCls in node.Classes)
         {
-            ClassObject co = new ClassObject(childCls, prefabs);
+            ClassLayout co = new ClassLayout(childCls, prefabs);
             GameObject childGo = co.Build();
             childLayouts.Add(co);
 

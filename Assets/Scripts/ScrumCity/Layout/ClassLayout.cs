@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using ScrumCity;
 
-public class ClassObject : CityLayout
+public class ClassLayout : CityLayout
 {
     private float minWidth = 1;
     private float minHeight = 1;
@@ -15,7 +15,7 @@ public class ClassObject : CityLayout
 
     public override Vector3 Position
     {
-        // Special get/set to deal with cylinders 
+        // Custom get/set to deal with cylinders 
         get {
             Vector3 pos = GameObj.transform.localPosition;
             if (((ClassNode)Node).IsInterface) pos.y /= 2;
@@ -28,14 +28,14 @@ public class ClassObject : CityLayout
         }
     }
 
-    public  ClassObject(ClassNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
+    public  ClassLayout(ClassNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
     {}
 
     public override GameObject Build()
     {
         ClassNode node = (ClassNode)Node;
         GameObj = MonoBehaviour.Instantiate(prefabs[node.IsInterface ? ObjectType.Interface : ObjectType.Class], Vector3.zero, Quaternion.identity);
-        GameObj.GetComponent<Details>().Node = Node;
+        GameObj.GetComponent<CityObject>().Node = Node;
 
         // Set initial scale before modifying based on method placement
         float width = Mathf.Clamp(((ClassNode)Node).IsInterface ? ((ClassNode)Node).NOA * 1.5f : ((ClassNode)Node).NOA, minWidth, maxWidth);
@@ -47,7 +47,7 @@ public class ClassObject : CityLayout
         List<CityLayout> childLayouts = new List<CityLayout>();
         foreach (MethodNode childMeth in node.Methods)
         {
-            MethodObject mo = new MethodObject(childMeth, prefabs);
+            MethodLayout mo = new MethodLayout(childMeth, prefabs);
             GameObject childGo = mo.Build();
             childLayouts.Add(mo);
 
@@ -62,7 +62,7 @@ public class ClassObject : CityLayout
     private void LayoutChildren(GameObject parent, List<CityLayout> children, Vector2 size)
     {
         // Algorithm 3.1 in https://wettel.github.io/download/Wettel10b-PhDThesis.pdf
-        // TODO: Generalize this function to play in Layout Base Class
+        // TODO: Generalize this function to place in Layout Base Class
 
         KDNode ptree = new KDNode(0, 0, size.x, size.y);
         Vector2 covrec = Vector2.zero;
