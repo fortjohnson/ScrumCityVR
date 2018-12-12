@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using ScrumCity;
 
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class MethodLayout : CityLayout {
 
     public override Vector3 Margin { get { return new Vector3(2f, 0.5f, 2f); } }

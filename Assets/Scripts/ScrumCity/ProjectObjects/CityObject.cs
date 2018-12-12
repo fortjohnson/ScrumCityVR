@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using ScrumCity;
 
-public class CityObject : MonoBehaviour {
+public interface CityObject {
 
-    public CityNode Node { get; set; }
+    CityNode Node { get; set; }
    
 }

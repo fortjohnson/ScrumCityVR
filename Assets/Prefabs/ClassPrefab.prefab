@@ -22,13 +22,13 @@ GameObject:
   - component: {fileID: 33585961615500608}
   - component: {fileID: 23746731082066544}
   - component: {fileID: 65111382287714362}
-  - component: {fileID: 114739837078594300}
+  - component: {fileID: 114296526948719476}
   m_Layer: 0
   m_Name: ClassPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4093649383121712
 Transform:
@@ -50,12 +50,12 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1494851430380808}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 50098a76fd091364ba393492be24cc0e, type: 2}
@@ -74,7 +74,7 @@ MeshRenderer:
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
+  m_LightmapParameters: {fileID: 15201, guid: 0000000000000000f000000000000000, type: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -97,7 +97,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114739837078594300
+--- !u!114 &114296526948719476
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +105,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1494851430380808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ac5299c1945fa041aec607a661b97ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ab5a06f9015de34ab2ef4eb956f8779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 

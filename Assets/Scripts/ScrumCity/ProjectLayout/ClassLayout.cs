@@ -1,47 +1,59 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ScrumCity;
 
-
-public class PackageLayout : CityLayout
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+public class ClassLayout : CityLayout
 {
-    private float packageHeight = 0.3f;
+    private float minWidth = 1.5f;
+    private float minHeight = 1.5f;
+    private float maxWidth = 100;
+    private float maxHeight = 200;
 
     public override Vector3 Margin { get { return new Vector3(3f, 0f, 3f); } }
 
+    public override Vector3 Position
+    {
+        // Custom get/set to deal with cylinders 
+        get {
+            Vector3 pos = GameObj.transform.localPosition;
+            if (((ClassNode)Node).IsInterface) pos.y /= 2;
+            return pos;
+        }
+        set
+        {
+            if (((ClassNode)Node).IsInterface) value.y *= 2;
+            GameObj.transform.localPosition = value;
+        }
+    }
 
-    public PackageLayout(PackageNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
-    { }
+    public  ClassLayout(ClassNode node, Dictionary<ObjectType, GameObject> prefabs) : base(node, prefabs)
+    {}
 
     public override GameObject Build()
     {
-        PackageNode node = (PackageNode)Node;
+        ClassNode node = (ClassNode)Node;
+        GameObj = MonoBehaviour.Instantiate(prefabs[node.IsInterface ? ObjectType.Interface : ObjectType.Class], Vector3.zero, Quaternion.identity);
+        GameObj.GetComponent<CityObject>().Node = Node;
+
+        // Set initial scale before modifying based on method placement
+        float width = Mathf.Clamp(((ClassNode)Node).IsInterface ? ((ClassNode)Node).NOA * 1.5f : ((ClassNode)Node).NOA, minWidth, maxWidth);
+        float height = Mathf.Clamp(((ClassNode)Node).NOM, minHeight, maxHeight);
+        height = ((ClassNode)Node).IsInterface ? height / 2f : height;       // Cylinders are different than rectangles 
+        GameObj.transform.localScale = new Vector3(width, height, width);
 
         Vector2 size = Vector2.zero;
         List<CityLayout> childLayouts = new List<CityLayout>();
-        GameObj = MonoBehaviour.Instantiate(prefabs[ObjectType.Package], Vector3.zero, Quaternion.identity);
-        GameObj.GetComponent<CityObject>().Node = Node;
-
-        // Build All Child Packages
-        foreach (PackageNode childPkg in node.Packages)
+        foreach (MethodNode childMeth in node.Methods)
         {
-            PackageLayout po = new PackageLayout(childPkg, prefabs);
-            GameObject childGo = po.Build();
-            childLayouts.Add(po);
+            MethodLayout mo = new MethodLayout(childMeth, prefabs);
+            GameObject childGo = mo.Build();
+            childLayouts.Add(mo);
 
-            size += new Vector2(po.LayoutSize.x, po.LayoutSize.z);
-        }
-
-        // Build All Child Classes
-        foreach (ClassNode childCls in node.Classes)
-        {
-            ClassLayout co = new ClassLayout(childCls, prefabs);
-            GameObject childGo = co.Build();
-            childLayouts.Add(co);
-
-            size += new Vector2(co.LayoutSize.x, co.LayoutSize.z);
+            size += new Vector2(mo.LayoutSize.x, mo.LayoutSize.z);
         }
 
         LayoutChildren(GameObj, childLayouts, size);
@@ -52,6 +64,7 @@ public class PackageLayout : CityLayout
     private void LayoutChildren(GameObject parent, List<CityLayout> children, Vector2 size)
     {
         // Algorithm 3.1 in https://wettel.github.io/download/Wettel10b-PhDThesis.pdf
+        // TODO: Generalize this function to place in Layout Base Class
 
         KDNode ptree = new KDNode(0, 0, size.x, size.y);
         Vector2 covrec = Vector2.zero;
@@ -104,10 +117,10 @@ public class PackageLayout : CityLayout
             covrec.x = fitNode.X + fitNode.Width > covrec.x ? fitNode.X + fitNode.Width : covrec.x;
             covrec.y = fitNode.Y + fitNode.Height > covrec.y ? fitNode.Y + fitNode.Height : covrec.y;
 
+
             //Place child on Parent (Unity uses center anchoring but KDtree using top left anchoring)
-            // TODO: Fix so this function can be generalized
-            float xPos = - ptree.Width / 2 + fitNode.Width / 2 + fitNode.X;
-            float yPos = packageHeight / 2 + c.LayoutSize.y / 2;
+            float xPos = -ptree.Width / 2 + fitNode.Width / 2 + fitNode.X;
+            float yPos = parent.transform.position.x - parent.transform.localScale.y / 2 + c.LayoutSize.y / 2;
             float zPos = ptree.Height / 2 - fitNode.Height / 2 - fitNode.Y;
             c.Position = new Vector3(xPos, yPos, zPos);
 
@@ -116,13 +129,22 @@ public class PackageLayout : CityLayout
         }
 
         //Calc Scale of Parent Package
-        parent.transform.localScale = new Vector3(covrec.x, packageHeight, covrec.y)+Margin;
+        parent.transform.localScale = new Vector3
+        {
+            // TODO:  Make decision on Class Size scaling
+            x = covrec.x > parent.transform.localScale.x ? covrec.x : parent.transform.localScale.x,
+            y = parent.transform.localScale.y,
+            z = covrec.y > parent.transform.localScale.z ? covrec.y : parent.transform.localScale.z
+            //x = Mathf.Clamp(covrec.x, minWidth, maxWidth),
+            //y = parent.transform.localScale.y,
+            //z = Mathf.Clamp(covrec.y, minWidth, maxWidth)
+        };
 
         //Move Children back scaled package and attach as children game objects
         foreach (CityLayout c in children)
         {
-            float xDiff = (ptree.Width - covrec.x)/2;
-            float zDiff = (ptree.Height - covrec.y)/2;
+            float xDiff = (ptree.Width - covrec.x) / 2;
+            float zDiff = (ptree.Height - covrec.y) / 2;
 
             Vector3 pos = c.GameObj.transform.localPosition;
             pos.x += xDiff;
