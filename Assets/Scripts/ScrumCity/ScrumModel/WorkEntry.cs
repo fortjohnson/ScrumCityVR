@@ -9,14 +9,16 @@ namespace ScrumCity
 
     public class WorkEntry
     {
-        public string Qname { get; private set; }
-        public float Hours { get; private set; }
-        public DateTime Date { get; private set; }
-        public WorkEntryType Type { get; private set; }
+        public string QName { get; set; }
+        public float Hours { get; set; }
+        public DateTime Date { get; set; }
+        public WorkEntryType Type { get; set; }
+
+        public WorkEntry() { }
 
         public WorkEntry(String qName, DateTime date, float hours, WorkEntryType type)
         {
-            Qname = qName;
+            QName = qName;
             Date = date;
             Hours = hours;
             Type = type;

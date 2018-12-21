@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 1024425671}
   - component: {fileID: 1024425672}
   m_Layer: 0
-  m_Name: CityBuilder
+  m_Name: ScrumCityManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,18 +404,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1024425670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb5e45fa078fdd546bb0019e577fce0d, type: 3}
+  m_Script: {fileID: 11500000, guid: cb2406982cd018b45813108d5ee2f504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   projectXmlFile: C:\Users\david\Documents\projects\ScrumCity\project.xml
-  packagePrefab: {fileID: 1942360394810728, guid: 8b8bd744d534ad94bac78c3e4388bf0d,
-    type: 2}
-  classPrefab: {fileID: 1494851430380808, guid: 5499b761a9a7fc94f814ad3dad533afb,
-    type: 2}
-  interfacePrefab: {fileID: 1363131256705060, guid: 73afed9bb50289d4e9271abd6a926416,
-    type: 2}
-  methodPrefab: {fileID: 1043108068017794, guid: 9f212f761d0f9cd42b48d86358c138fa,
-    type: 2}
+  prefabs:
+  - Type: 0
+    Prefab: {fileID: 1942360394810728, guid: 8b8bd744d534ad94bac78c3e4388bf0d, type: 2}
+  - Type: 1
+    Prefab: {fileID: 1494851430380808, guid: 5499b761a9a7fc94f814ad3dad533afb, type: 2}
+  - Type: 2
+    Prefab: {fileID: 1363131256705060, guid: 73afed9bb50289d4e9271abd6a926416, type: 2}
+  - Type: 3
+    Prefab: {fileID: 1043108068017794, guid: 9f212f761d0f9cd42b48d86358c138fa, type: 2}
 --- !u!1001 &1667129292
 Prefab:
   m_ObjectHideFlags: 0

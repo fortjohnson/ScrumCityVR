@@ -7,6 +7,7 @@ namespace ScrumCity {
     public abstract class CityNode
     {
         public string Name { get; private set; }
+        public string QName { get; private set; }
         public Dictionary<string, List<CityNode>> children = new Dictionary<string, List<CityNode>>();
         public List<CityNode> Children
         {
@@ -16,9 +17,10 @@ namespace ScrumCity {
             }
         }
 
-        public CityNode(string name)
+        public CityNode(string name, string qname)
         {
             Name = name;
+            QName = qname;
         }
 
         public abstract void addChild(CityNode node);
@@ -36,7 +38,7 @@ namespace ScrumCity {
             }
         }
 
-        public ProjectNode(string name) : base(name)
+        public ProjectNode(string name) : base(name, name)
         {
             children["packages"] = new List<CityNode>();
         }
@@ -70,7 +72,7 @@ namespace ScrumCity {
             }
         }
 
-        public PackageNode(string name) : base(name)
+        public PackageNode(string name, string qname) : base(name, qname)
         {
             children["packages"] = new List<CityNode>();
             children["classes"] = new List<CityNode>();
@@ -109,7 +111,7 @@ namespace ScrumCity {
             }
         }
 
-        public ClassNode(string name, int loc, int noa, bool isAbstract=false, bool isInterface=false) : base(name)
+        public ClassNode(string name, string qname, int loc, int noa, bool isAbstract=false, bool isInterface=false) : base(name, qname)
         {
             IsAbstract = isAbstract;
             IsInterface = isInterface;
@@ -135,7 +137,7 @@ namespace ScrumCity {
         public int LOC { get; private set; }
         public int NOP { get; private set; }
 
-        public MethodNode(string name, int loc, int nop) : base(name)
+        public MethodNode(string name, string qname, int loc, int nop) : base(name, qname)
         {
             LOC = loc;
             NOP = nop;

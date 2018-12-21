@@ -30,28 +30,28 @@ public class ClassObject : MonoBehaviour, CityObject
 
     private void SetMaterial()
     {
-        //if (node.LOC < 200) color = colors[200];
-        //else if (node.LOC < 500) color = colors[500];
-        //else if (node.LOC < 1000) color = colors[1000];
-        //else if (node.LOC < 1500) color = colors[1500];
-        //else if (node.LOC < 2000) color = colors[2000];
-        //else color = colors[2001];
+        if (node.LOC < 200) color = colors[200];
+        else if (node.LOC < 500) color = colors[500];
+        else if (node.LOC < 1000) color = colors[1000];
+        else if (node.LOC < 1500) color = colors[1500];
+        else if (node.LOC < 2000) color = colors[2000];
+        else color = colors[2001];
 
-        //rend = GetComponent<Renderer>();
-        //Material mat;
-        //if (!materials.TryGetValue(color, out mat))
-        //{
-        //    mat = new Material(rend.sharedMaterial);
-        //    mat.color = color;
-        //    materials[color] = mat;
-        //    //Debug.Log(string.Format("New Color - {0} - for LOC: {1}", c, node.LOC));
-        //}
-        //rend.sharedMaterial = mat;
+        rend = GetComponent<Renderer>();
+        Material mat;
+        if (!materials.TryGetValue(color, out mat))
+        {
+            mat = new Material(rend.sharedMaterial);
+            mat.color = color;
+            materials[color] = mat;
+            //Debug.Log(string.Format("New Color - {0} - for LOC: {1}", c, node.LOC));
+        }
+        rend.sharedMaterial = mat;
 
-        //block = new MaterialPropertyBlock();
-        //colorID = Shader.PropertyToID("_Color");
+        block = new MaterialPropertyBlock();
+        colorID = Shader.PropertyToID("_Color");
 
-        //block.SetColor(colorID, color);
-        //rend.SetPropertyBlock(block);
+        block.SetColor(colorID, color);
+        rend.SetPropertyBlock(block);
     }
 }

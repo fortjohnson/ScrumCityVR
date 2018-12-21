@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -12,32 +13,52 @@ namespace ScrumCity
         public string ID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Owner { get; set; }
         public FeatureType Type { get; set; }
         public FeaturePriority Priority { get; set; }
         public string Category { get; set; }
-        public Sprint ParentSprint { get; private set; }
-        public float OgWorkEstimate { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime CompleteDate { get; set; }
+        public Sprint ParentSprint { get; set; }
+        public float OriginalWorkEstimate { get; set; }
+        public DateTime CommenceDateTime { get; set; }
+        public DateTime CompletionDateTime { get; set; }
 
+        [XmlArray]
+        [XmlArrayItem(ElementName = "MethodRef")]
         public List<string> MethodRefs { get; set; }
+
+        [XmlArray]
+        [XmlArrayItem(ElementName = "ClassRef")]
         public List<string> ClassRefs { get; set; }
+
         public List<string> AllRefs { get { return MethodRefs.Concat(ClassRefs).ToList(); } }
-        public List<WorkEntry> RemainWorkEntries { get; set; }
-        public List<WorkEntry> CompleteWorkEntries { get; set; }
+        public List<WorkEntry> WorkEntries { get; set; }
+        public List<WorkEntry> RemainingWorkEntries {
+            get
+            {
+                return WorkEntries.Where(s => s.Type == WorkEntryType.Remaining).ToList();
+            }
+        }
+        public List<WorkEntry> CompletedWorkEntries
+        {
+            get
+            {
+                return WorkEntries.Where(s => s.Type == WorkEntryType.Completed).ToList();
+            }
+        }
         public List<string> Tasks { get; set; }
+
+        public Feature() { }
 
         public Feature(Sprint parentSprint, string id = null, string title = null, float workEstimate = 0)
         {
             ID = id;
             Title = title;
-            OgWorkEstimate = workEstimate;
+            OriginalWorkEstimate = workEstimate;
             ParentSprint = parentSprint;
 
             MethodRefs = new List<string>();
             ClassRefs = new List<string>();
-            RemainWorkEntries = new List<WorkEntry>();
-            CompleteWorkEntries = new List<WorkEntry>();
+            WorkEntries = new List<WorkEntry>();
             Tasks = new List<string>();
         }
     }

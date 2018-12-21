@@ -12,14 +12,14 @@ public class ProjectModelTest {
         // Use the Assert class to test conditions.
 
         //Create a couple methods
-        MethodNode meth1 = new MethodNode("Method1", 10, 1);
-        MethodNode meth2 = new MethodNode("Method2", 35, 2);
-        MethodNode meth3 = new MethodNode("Method3", 10, 1);
-        MethodNode meth4 = new MethodNode("Method4", 35, 2);
+        MethodNode meth1 = new MethodNode("Method1", "org.meth1", 10, 1);
+        MethodNode meth2 = new MethodNode("Method2", "org.meth2", 35, 2);
+        MethodNode meth3 = new MethodNode("Method3", "org.meth3", 10, 1);
+        MethodNode meth4 = new MethodNode("Method4", "org.meth4", 35, 2);
 
         //Create a couple classes
-        ClassNode class1 = new ClassNode("Class1", 65, 5);
-        ClassNode class2 = new ClassNode("Class2", 250, 3);
+        ClassNode class1 = new ClassNode("Class1", "org.cls1", 65, 5);
+        ClassNode class2 = new ClassNode("Class2", "org.cls2", 250, 3);
 
         //Add some methods to the classes
         class1.addChild(meth1);
@@ -28,10 +28,10 @@ public class ProjectModelTest {
         class2.addChild(meth4);
 
         //Create a couple packages
-        PackageNode package1 = new PackageNode("org");
-        PackageNode package2 = new PackageNode("org.package");
-        PackageNode package3 = new PackageNode("org.package.tests");
-        PackageNode package4 = new PackageNode("org.audit");
+        PackageNode package1 = new PackageNode("org", "org.pkg1");
+        PackageNode package2 = new PackageNode("org.package", "org.pkg2");
+        PackageNode package3 = new PackageNode("org.package.tests", "org.pkg3");
+        PackageNode package4 = new PackageNode("org.audit", "org.pkg4");
 
         //Add packages to packages
         package1.addChild(package2);
@@ -100,12 +100,14 @@ public class ProjectModelTest {
         Assert.AreEqual(29, cassandra.Packages.Count);
         Assert.AreEqual(0, cassandra.Classes.Count);
         Assert.AreEqual(29, cassandra.Children.Count);
+        Assert.AreEqual("org.apache.cassandra", cassandra.QName);
 
 
         Assert.AreEqual("org.apache.cassandra.auth", cassandra.Packages[0].Name);
         PackageNode auth = cassandra.Packages[0];
         Assert.AreEqual(0, auth.Packages.Count);
         Assert.AreEqual(43, auth.Classes.Count);
+        Assert.AreEqual("org.apache.cassandra.auth", auth.QName);
 
         string dbName = "org.apache.cassandra.db";
         PackageNode db = (PackageNode) cassandra.Children.First(s => s.Name == dbName);
@@ -117,7 +119,7 @@ public class ProjectModelTest {
         string cellName = "Cell";
         ClassNode cell = (ClassNode)db.Children.First(s => s.Name == cellName);
         Assert.AreEqual(cellName, cell.Name);
-        Assert.AreEqual(cell.LOC, 1);
+        Assert.AreEqual(cell.LOC, 40);
         Assert.AreEqual(cell.NOM, 13);
         Assert.AreEqual(cell.NOA, 1);
         Assert.IsTrue(cell.IsInterface);
@@ -125,9 +127,11 @@ public class ProjectModelTest {
         Assert.IsFalse(cell.IsEnum);
         Assert.AreEqual(13, cell.Methods.Count);
         Assert.AreEqual(13, cell.Children.Count);
+        Assert.AreEqual("org.apache.cassandra.db.Cell", cell.QName);
 
         string methodName = "reconcile";
         MethodNode rec = (MethodNode)cell.Children.First(s => s.Name == methodName);
         Assert.AreEqual(methodName, rec.Name);
+        Assert.AreEqual("org.apache.cassandra.db.Cell#reconcile", rec.QName);
     }
 }

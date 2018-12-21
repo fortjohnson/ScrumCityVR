@@ -11,10 +11,12 @@ namespace ScrumCity
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime ExpCompletionDate { get; set; }
-        public DateTime ActCompletionDate { get; set; }
+        public DateTime ExpectedCompletionDate { get; set; }
+        public DateTime ActualCompletionDate { get; set; }
 
         public List<Feature> Features { get; set; }
+
+        public Sprint() { }
 
         public Sprint(Release parent, string id=null, string title=null)
         {

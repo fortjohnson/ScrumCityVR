@@ -51,7 +51,7 @@ namespace ScrumCity
                     }
                 case "package":
                     {
-                        model = new PackageNode(node.SelectSingleNode("./name").InnerText);
+                        model = new PackageNode(node.SelectSingleNode("./name").InnerText, node.Attributes["qname"].Value);
                         parent.addChild(model);
 
                         XmlNode packages = node.SelectSingleNode("./packages");
@@ -71,7 +71,7 @@ namespace ScrumCity
                         bool isAbstract = node.Attributes["abstract"] != null ? true : false;
                         bool isInterface = node.Attributes["interface"] != null ? true : false;
 
-                        model = new ClassNode(name, loc, noa, isAbstract, isInterface);
+                        model = new ClassNode(name, node.Attributes["qname"].Value, loc, noa, isAbstract, isInterface);
                         parent.addChild(model);
 
                         XmlNode methods = node.SelectSingleNode("./methods");
@@ -86,7 +86,7 @@ namespace ScrumCity
                         int nop = int.Parse(node.SelectSingleNode("./nop").InnerText);
 
                         ((ClassNode)parent).IsEnum = node.SelectSingleNode("./enum") != null;
-                        model = new MethodNode(name, loc, nop);
+                        model = new MethodNode(name, node.Attributes["qname"].Value, loc, nop);
                         parent.addChild(model);
 
                         // leave children empty since methods have no children
